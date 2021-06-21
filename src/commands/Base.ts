@@ -20,6 +20,10 @@ export abstract class Base {
     }
   }
 
+  getPaths() {
+    return this.paths;
+  }
+
   protected getParent(data: Record<string, any>) {
     return this.paths.slice(0, -1).reduce((carry, path) => {
       return carry[path];

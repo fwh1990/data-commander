@@ -1,5 +1,16 @@
 import { SetCommand, DataSchema } from '../../src';
 
+/**
+ * Test for base class
+ */
+it('can get paths', () => {
+  const paths: [string, ...string[]] = ['test', 'test1'];
+  const command = new SetCommand(paths, 2);
+
+  expect(command.getPaths()).toEqual(paths);
+  expect(command.getPaths().toString()).toEqual(paths.toString());
+});
+
 it('set basic value', () => {
   const data1: Record<string, any> = {};
   const data2 = { test: '2' };
