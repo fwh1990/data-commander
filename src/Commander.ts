@@ -12,7 +12,7 @@ export interface SchemaCollection {
 }
 
 export class Commander {
-  static fromCollection(collection: SchemaCollection) {
+  static fromSchema(collection: SchemaCollection) {
     return {
       migrate: (data: object) => {
         return this.execute(collection.ups, data);

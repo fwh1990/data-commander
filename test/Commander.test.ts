@@ -45,9 +45,9 @@ it('can revert the commands', () => {
   const firstMigrated = JSON.stringify(data);
   expect(originalStr).not.toEqual(JSON.stringify(firstMigrated));
 
-  Commander.fromCollection(schema).revert(data);
+  Commander.fromSchema(schema).revert(data);
   expect(originalStr).toEqual(JSON.stringify(data));
 
-  Commander.fromCollection(schema).migrate(data);
+  Commander.fromSchema(schema).migrate(data);
   expect(firstMigrated).toEqual(JSON.stringify(data));
 });
