@@ -1,0 +1,42 @@
+{
+  "name": "data-commander",
+  "version": "0.0.1",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./es/index.js"
+    },
+    "./": "./"
+  },
+  "files": [
+    "es",
+    "lib",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "jest --runInBand",
+    "prepublishOnly": "ts-prepublish"
+  },
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/node": "^15.12.4",
+    "@types/uuid": "^8.3.0",
+    "jest": "^27.0.4",
+    "prettier": "^2.3.1",
+    "ts-jest": "^27.0.3",
+    "ts-prepublish": "^2.0.0",
+    "typescript": "^4.3.3"
+  }
+}
