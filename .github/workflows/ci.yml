@@ -32,7 +32,7 @@ jobs:
       - run: yarn test
       - name: Coverage
         uses: codecov/codecov-action@v1
-        if: matrix.node-version == '14' && matrix.ts-version == '4.3' && github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
+        if: matrix.node-version == '14' && matrix.ts-version == '4.3' && github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest'
   publish:
     if: "!contains(toJson(github.event.commits), '[skip ci]')"
     needs: test
