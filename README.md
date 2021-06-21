@@ -2,6 +2,13 @@
 
 Migrate data from schema.
 
+
+[![License](https://img.shields.io/github/license/fwh1990/data-commander)](https://github.com/fwh1990/data-commander/blob/master/LICENSE)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/fwh1990/data-commander/CI/master)](https://github.com/fwh1990/data-commander/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/fwh1990/data-commander)](https://codecov.io/gh/fwh1990/data-commander)
+[![npm](https://img.shields.io/npm/v/data-commander)](https://www.npmjs.com/package/data-commander)
+
+
 # Installation
 
 ```bash
