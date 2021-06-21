@@ -22,6 +22,14 @@
     "test": "jest --runInBand",
     "prepublishOnly": "ts-prepublish"
   },
+  "peerDependencies": {
+    "typescript": ">=4.3"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
