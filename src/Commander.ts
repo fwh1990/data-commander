@@ -40,7 +40,11 @@ export class Commander {
     ).execute(data);
   }
 
-  constructor(protected commands: Base[]) {}
+  constructor(protected readonly commands: Base[]) {}
+
+  getCommands() {
+    return this.commands;
+  }
 
   execute(data: object) {
     return this.commands.forEach((command) => command.execute(data));

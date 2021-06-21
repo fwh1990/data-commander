@@ -14,6 +14,8 @@ it('can compose commands', () => {
     new RpushCommand(['test1', 'test4'], 'c'),
   ]);
 
+  expect(commaner.getCommands()).toHaveLength(4);
+
   commaner.execute(data);
   expect(data.test1.test2).toEqual(3);
   expect(data.test1.test4).toEqual(expect.arrayContaining(['a', 'b', 'c']));
