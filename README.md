@@ -81,6 +81,87 @@ console.log(data); // { x: 1, y: 2 }
 
 # Commands
 
+## SetCommand
+
+Set a value to specific path.
+
+```typescript
+const data = {};
+const commander = new Commander([
+  new SetCommand(['test'], { hello: 'world' })
+]);
+
+commander.execute(data);
+
+console.log(data); // { test: { hello: 'world' } }
+```
+
+## DeleteCommand
+
+Delete a specific object property or array item.
+
+```typescript
+const data = { a: 1, b: 2 };
+const commander = new Commander([
+  new DeleteCommand(['a'])
+]);
+
+commander.execute(data);
+
+console.log(data); // { b: 2 }
+```
+
+## InsertCommand
+
+Insert an item to array with specific index.
+
+```typescript
+const data = ['a', 'b'];
+const commander = new Commander([
+  new InsertCommand(['1'], 'c')
+]);
+
+commander.execute(data);
+console.log(data); // ['a', 'c', 'b']
+
+commander.execute(data);
+console.log(data); // ['a', 'c', 'c', 'b']
+```
+
+## LpushCommand
+
+Left push an item to array.
+
+```typescript
+const data = ['a', 'b'];
+const commander = new Commander([
+  new LpushCommand([], 'c')
+]);
+
+commander.execute(data);
+console.log(data); // ['c', 'a', 'b']
+
+commander.execute(data);
+console.log(data); // ['c', 'c', 'a', 'b']
+```
+
+## RpushCommand
+
+Right push an item to array.
+
+```typescript
+const data = ['a', 'b'];
+const commander = new Commander([
+  new RpushCommand([], 'c')
+]);
+
+commander.execute(data);
+console.log(data); // ['a', 'b', 'c']
+
+commander.execute(data);
+console.log(data); // ['a', 'b', 'c', 'c']
+```
+
 ## MergeCommand
 
 Merge deep object to another object.
@@ -129,23 +210,3 @@ const commander = new Commander([
 commander.execute(data);
 console.log(data); // [ 'a', 'b', <empty>, <empty>, 'c' ]
 ```
-
-## SetCommand
-
-Set a value to specific path.
-
-## DeleteCommand
-
-Delete a specific object property or array item.
-
-## InsertCommand
-
-Insert an item to array with specific index.
-
-## LpushCommand
-
-Left push an item to array.
-
-## RpushCommand
-
-Right push an item to array.
