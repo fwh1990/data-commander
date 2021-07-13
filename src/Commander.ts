@@ -2,7 +2,7 @@ import { Base, DataSchema } from './commands/Base';
 import { DeleteCommand } from './commands/DeleteCommand';
 import { InsertCommand } from './commands/InsertCommand';
 import { SetCommand } from './commands/SetCommand';
-import * as uuid from 'uuid';
+import { nanoid } from 'nanoid';
 
 export interface SchemaCollection {
   ups: DataSchema[];
@@ -49,7 +49,7 @@ export class Commander {
     const collection: SchemaCollection = {
       ups: [],
       downs: [],
-      id: uuid.v1(),
+      id: nanoid(16),
     };
 
     this.commands.forEach((command) => {
