@@ -3,11 +3,10 @@ import { DeleteCommand } from './commands/DeleteCommand';
 import { InsertCommand } from './commands/InsertCommand';
 import { SetCommand } from './commands/SetCommand';
 import { nanoid } from 'nanoid';
-import cloneDeep from 'lodash.clonedeep';
 
 export interface SchemaCollection {
-  ups: DataSchema[];
-  downs: DataSchema[];
+  up: DataSchema[];
+  down: DataSchema[];
   id: string;
 }
 
@@ -15,15 +14,19 @@ export class Commander {
   static fromSchema(collection: SchemaCollection) {
     return {
       migrate: (data: object) => {
-        return this.execute(collection.ups, data);
+        this.execute(collection.up, data, false);
       },
       revert: (data: object) => {
-        return this.execute(collection.downs, data);
+        this.execute(collection.down, data, false);
       },
     };
   }
 
-  protected static execute(schema: DataSchema[], data: object) {
+  protected static execute(
+    schema: DataSchema[],
+    data: object,
+    createSchema: boolean = true,
+  ) {
     return new Commander(
       schema.map((upCommand) => {
         switch (upCommand.type) {
@@ -37,7 +40,7 @@ export class Commander {
             throw new TypeError('Unknown command type: ' + upCommand.type);
         }
       }),
-    ).execute(data);
+    ).execute(data, createSchema);
   }
 
   constructor(protected readonly commands: Base[]) {}
@@ -46,30 +49,22 @@ export class Commander {
     return this.commands;
   }
 
-  execute(data: object): SchemaCollection {
-    const collection: SchemaCollection = {
-      ups: [],
-      downs: [],
+  execute(data: object, createSchema: boolean = true): SchemaCollection {
+    const schemas: SchemaCollection = {
+      up: [],
+      down: [],
       id: nanoid(16),
     };
 
     this.commands.forEach((command) => {
-      const { migrate, revert } = command.execute(data);
+      const schema = command.execute(data, createSchema);
 
-      collection.ups.push(...migrate);
-      collection.downs.unshift(...revert);
+      if (createSchema) {
+        schemas.up.push(...schema.up);
+        schemas.down.unshift(...schema.down);
+      }
     });
 
-    // Clear Proxy effect.
-    if (collection.ups.length) {
-      collection.ups = cloneDeep(collection.ups);
-    }
-
-    // Clear Proxy effect.
-    if (collection.downs.length) {
-      collection.downs = cloneDeep(collection.downs);
-    }
-
-    return collection;
+    return schemas;
   }
 }

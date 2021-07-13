@@ -40,18 +40,21 @@ export abstract class Base {
     return this.paths[this.paths.length - 1]!;
   }
 
-  abstract execute(data: Record<string, any>): {
-    migrate: DataSchema[];
-    revert: DataSchema[];
+  abstract execute(
+    data: Record<string, any>,
+    createSchema?: boolean,
+  ): {
+    up: DataSchema[];
+    down: DataSchema[];
   };
 
   protected initCommands(): {
-    migrate: DataSchema[];
-    revert: DataSchema[];
+    up: DataSchema[];
+    down: DataSchema[];
   } {
     return {
-      migrate: [],
-      revert: [],
+      up: [],
+      down: [],
     };
   }
 }

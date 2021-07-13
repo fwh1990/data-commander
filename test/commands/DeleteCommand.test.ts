@@ -37,14 +37,14 @@ it('can create migrate command', () => {
   const command = new DeleteCommand(['2']);
 
   expect(command.execute({ '2': 'cc' })).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['2'],
         value: null,
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['2'],
@@ -54,14 +54,14 @@ it('can create migrate command', () => {
   });
 
   expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['2'],
         value: null,
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'insert',
         paths: ['2'],
@@ -74,9 +74,9 @@ it('can create migrate command', () => {
 it('will not generate command when property is not found', () => {
   const command = new DeleteCommand(['2']);
 
-  expect(command.execute({ '1': 'cc' }).migrate).toHaveLength(0);
-  expect(command.execute({ '1': 'cc' }).revert).toHaveLength(0);
+  expect(command.execute({ '1': 'cc' }).up).toHaveLength(0);
+  expect(command.execute({ '1': 'cc' }).down).toHaveLength(0);
 
-  expect(command.execute(['aa', 'bb']).migrate).toHaveLength(0);
-  expect(command.execute(['aa', 'bb']).revert).toHaveLength(0);
+  expect(command.execute(['aa', 'bb']).up).toHaveLength(0);
+  expect(command.execute(['aa', 'bb']).down).toHaveLength(0);
 });

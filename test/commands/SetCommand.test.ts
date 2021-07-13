@@ -67,14 +67,14 @@ it('can create migrate command', () => {
   const command = new SetCommand(['test', 'test1'], 'x');
 
   expect(command.execute({ test: { test1: 'y' } })).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 'x',
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
@@ -84,14 +84,14 @@ it('can create migrate command', () => {
   });
 
   expect(command.execute({ test: {} })).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 'x',
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['test', 'test1'],
@@ -104,14 +104,14 @@ it('can create migrate command', () => {
 it('Migrate command will not generate with same value', () => {
   let command = new SetCommand(['test', 'test1'], 'x');
 
-  expect(command.execute({ test: { test1: 'x' } }).migrate).toHaveLength(0);
-  expect(command.execute({ test: { test1: 'x' } }).revert).toHaveLength(0);
+  expect(command.execute({ test: { test1: 'x' } }).up).toHaveLength(0);
+  expect(command.execute({ test: { test1: 'x' } }).down).toHaveLength(0);
 
   command = new SetCommand(['test', 'test1'], ['a', 'b', 'c']);
+  expect(command.execute({ test: { test1: ['a', 'b', 'c'] } }).up).toHaveLength(
+    0,
+  );
   expect(
-    command.execute({ test: { test1: ['a', 'b', 'c'] } }).migrate,
-  ).toHaveLength(0);
-  expect(
-    command.execute({ test: { test1: ['a', 'b', 'c'] } }).revert,
+    command.execute({ test: { test1: ['a', 'b', 'c'] } }).down,
   ).toHaveLength(0);
 });

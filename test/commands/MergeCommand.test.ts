@@ -63,7 +63,7 @@ it('can create migrate command', () => {
   });
 
   expect(command.execute({})).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test'],
@@ -72,7 +72,7 @@ it('can create migrate command', () => {
         },
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['test'],
@@ -82,14 +82,14 @@ it('can create migrate command', () => {
   });
 
   expect(command.execute({ test: {} })).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 3,
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['test', 'test1'],
@@ -99,7 +99,7 @@ it('can create migrate command', () => {
   });
 
   expect(command.execute({ test: 'x' })).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test'],
@@ -108,7 +108,7 @@ it('can create migrate command', () => {
         },
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test'],
@@ -118,14 +118,14 @@ it('can create migrate command', () => {
   });
 
   expect(command.execute({ test: { test1: 2 } })).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 3,
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
@@ -142,6 +142,6 @@ it('Migrate command will not generate with same value', () => {
     },
   });
 
-  expect(command.execute({ test: { test1: 3 } }).migrate).toHaveLength(0);
-  expect(command.execute({ test: { test1: 3 } }).revert).toHaveLength(0);
+  expect(command.execute({ test: { test1: 3 } }).up).toHaveLength(0);
+  expect(command.execute({ test: { test1: 3 } }).down).toHaveLength(0);
 });

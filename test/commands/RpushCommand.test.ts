@@ -31,14 +31,14 @@ it('can create migrate command', () => {
   const command = new RpushCommand([], 'cc');
 
   expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
-    migrate: expect.arrayContaining([
+    up: expect.arrayContaining([
       <DataSchema>{
         type: 'insert',
         paths: ['3'],
         value: 'cc',
       },
     ]),
-    revert: expect.arrayContaining([
+    down: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['3'],

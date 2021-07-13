@@ -1,7 +1,8 @@
+import cloneDeep from 'lodash.clonedeep';
 import { Base } from './Base';
 
 export class InsertCommand extends Base {
-  execute(data: Record<number, any>) {
+  execute(data: Record<number, any>, createSchema: boolean = true) {
     const parent = this.getParent(data);
     const index = Number(this.getLastPath());
     const commands = this.initCommands();
@@ -16,16 +17,19 @@ export class InsertCommand extends Base {
       throw new TypeError(`Array key is not a number`);
     }
 
-    commands.migrate.push({
-      type: 'insert',
-      paths: this.paths,
-      value: this.value,
-    });
-    commands.revert.push({
-      type: 'delete',
-      paths: this.paths,
-      value: null,
-    });
+    if (createSchema) {
+      commands.up.push({
+        type: 'insert',
+        paths: this.paths,
+        value: cloneDeep(this.value),
+      });
+      commands.down.push({
+        type: 'delete',
+        paths: this.paths,
+        value: null,
+      });
+    }
+
     parent.splice(index, 0, this.value);
 
     return commands;

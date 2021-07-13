@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import { Base, DataSchema } from './Base';
 
 export class LpushCommand extends Base {
@@ -7,7 +8,7 @@ export class LpushCommand extends Base {
     super(first as [string, ...string[]], value);
   }
 
-  execute(data: Record<string, any>) {
+  execute(data: Record<string, any>, createSchema: boolean = true) {
     const currentData = this.getData(data);
     const commands = this.initCommands();
 
@@ -19,16 +20,19 @@ export class LpushCommand extends Base {
       );
     }
 
-    commands.migrate.push({
-      type: 'insert',
-      paths: this.paths.concat('0'),
-      value: this.value,
-    });
-    commands.revert.push({
-      type: 'delete',
-      paths: this.paths.concat('0'),
-      value: null,
-    });
+    if (createSchema) {
+      commands.up.push({
+        type: 'insert',
+        paths: this.paths.concat('0'),
+        value: cloneDeep(this.value),
+      });
+      commands.down.push({
+        type: 'delete',
+        paths: this.paths.concat('0'),
+        value: null,
+      });
+    }
+
     currentData.unshift(this.value);
 
     return commands;

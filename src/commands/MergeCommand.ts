@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import { Base } from './Base';
 
@@ -9,7 +10,7 @@ export class MergeCommand extends Base {
     this.toMergeData = value;
   }
 
-  execute(data: Record<string, any>) {
+  execute(data: Record<string, any>, createSchema: boolean = true) {
     const commands = this.initCommands();
 
     (function loop(
@@ -23,24 +24,26 @@ export class MergeCommand extends Base {
 
         if (typeof source !== 'object' || typeof foreign !== 'object') {
           if (!isEqual(source, foreign)) {
-            commands.migrate.push({
-              type: 'set',
-              paths: paths.concat(property),
-              value: foreign,
-            });
-
-            if (obj.hasOwnProperty(property)) {
-              commands.revert.push({
+            if (createSchema) {
+              commands.up.push({
                 type: 'set',
                 paths: paths.concat(property),
-                value: source,
+                value: cloneDeep(foreign),
               });
-            } else {
-              commands.revert.push({
-                type: 'delete',
-                paths: paths.concat(property),
-                value: null,
-              });
+
+              if (obj.hasOwnProperty(property)) {
+                commands.down.push({
+                  type: 'set',
+                  paths: paths.concat(property),
+                  value: cloneDeep(source),
+                });
+              } else {
+                commands.down.push({
+                  type: 'delete',
+                  paths: paths.concat(property),
+                  value: null,
+                });
+              }
             }
 
             obj[property] = foreign;
@@ -51,7 +54,7 @@ export class MergeCommand extends Base {
       });
     })(data, this.toMergeData, []);
 
-    commands.revert.reverse();
+    commands.down.reverse();
 
     return commands;
   }
