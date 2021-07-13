@@ -50,7 +50,7 @@ const commander = new Commander([
   new DeleteCommand(['y']),
 ]);
 
-commander.toSchema();
+const schema = commander.execute({});
 // {
 //   ups: [
 //     { type: 'set', paths: ['x'], value: 10 },
@@ -78,9 +78,8 @@ const commander = new Commander([
 ]);
 
 // Generate schema before execute.
-const schema = commander.toSchema(data);
+const schema = commander.execute(data);
 
-commander.execute(data);
 Commander.fromSchema(schema).revert(data);
 
 console.log(data); // { x: 1, y: 2 }
