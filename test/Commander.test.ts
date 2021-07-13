@@ -41,9 +41,7 @@ it('can revert the commands', () => {
     new DeleteCommand(['test2', '0']),
   ]);
 
-  const schema = commaner.toSchema(data);
-
-  commaner.execute(data);
+  const schema = commaner.execute(data);
   const firstMigrated = JSON.stringify(data);
   expect(originalStr).not.toEqual(JSON.stringify(firstMigrated));
 

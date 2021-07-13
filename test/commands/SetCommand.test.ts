@@ -66,47 +66,52 @@ it('does not override same object', () => {
 it('can create migrate command', () => {
   const command = new SetCommand(['test', 'test1'], 'x');
 
-  expect(command.getMigrateCommand({ test: { test1: 'y' } })).toEqual(
-    expect.arrayContaining([
+  expect(command.execute({ test: { test1: 'y' } })).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 'x',
       },
     ]),
-  );
-  expect(command.getRevertCommand({ test: { test1: 'y' } })).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 'y',
       },
     ]),
-  );
+  });
 
-  expect(command.getRevertCommand({ test: {} })).toEqual(
-    expect.arrayContaining([
+  expect(command.execute({ test: {} })).toMatchObject({
+    migrate: expect.arrayContaining([
+      <DataSchema>{
+        type: 'set',
+        paths: ['test', 'test1'],
+        value: 'x',
+      },
+    ]),
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['test', 'test1'],
         value: null,
       },
     ]),
-  );
+  });
 });
 
 it('Migrate command will not generate with same value', () => {
   let command = new SetCommand(['test', 'test1'], 'x');
 
-  expect(command.getMigrateCommand({ test: { test1: 'x' } })).toHaveLength(0);
-  expect(command.getRevertCommand({ test: { test1: 'x' } })).toHaveLength(0);
+  expect(command.execute({ test: { test1: 'x' } }).migrate).toHaveLength(0);
+  expect(command.execute({ test: { test1: 'x' } }).revert).toHaveLength(0);
 
   command = new SetCommand(['test', 'test1'], ['a', 'b', 'c']);
   expect(
-    command.getMigrateCommand({ test: { test1: ['a', 'b', 'c'] } }),
+    command.execute({ test: { test1: ['a', 'b', 'c'] } }).migrate,
   ).toHaveLength(0);
   expect(
-    command.getRevertCommand({ test: { test1: ['a', 'b', 'c'] } }),
+    command.execute({ test: { test1: ['a', 'b', 'c'] } }).revert,
   ).toHaveLength(0);
 });

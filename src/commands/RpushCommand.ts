@@ -8,37 +8,8 @@ export class RpushCommand extends Base {
   }
 
   execute(data: Record<string, any>) {
-    const currentData = this.validate(data);
-
-    currentData.push(this.value);
-  }
-
-  getMigrateCommand(data: Record<string, any>): DataSchema[] {
-    const currentData = this.validate(data);
-
-    return [
-      {
-        type: 'insert',
-        paths: this.paths.concat(currentData.length.toString()),
-        value: this.value,
-      },
-    ];
-  }
-
-  getRevertCommand(data: Record<string, any>): DataSchema[] {
-    const currentData = this.validate(data);
-
-    return [
-      {
-        type: 'delete',
-        paths: this.paths.concat(currentData.length.toString()),
-        value: null,
-      },
-    ];
-  }
-
-  protected validate(data: Record<string, any>): any[] {
     const currentData = this.getData(data);
+    const commands = this.initCommands();
 
     if (!Array.isArray(currentData)) {
       throw new TypeError(
@@ -48,6 +19,18 @@ export class RpushCommand extends Base {
       );
     }
 
-    return currentData;
+    commands.migrate.push({
+      type: 'insert',
+      paths: this.paths.concat(currentData.length.toString()),
+      value: this.value,
+    });
+    commands.revert.push({
+      type: 'delete',
+      paths: this.paths.concat(currentData.length.toString()),
+      value: null,
+    });
+    currentData.push(this.value);
+
+    return commands;
   }
 }

@@ -30,23 +30,20 @@ it('the execute data must be array type', () => {
 it('can create migrate command', () => {
   const command = new LpushCommand([], 'cc');
 
-  expect(command.getMigrateCommand(['aa', 'bb', 'cc'])).toEqual(
-    expect.arrayContaining([
+  expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'insert',
         paths: ['0'],
         value: 'cc',
       },
     ]),
-  );
-
-  expect(command.getRevertCommand(['aa', 'bb', 'cc'])).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['0'],
         value: null,
       },
     ]),
-  );
+  });
 });

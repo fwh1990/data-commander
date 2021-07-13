@@ -1,39 +1,10 @@
-import { Base, DataSchema } from './Base';
+import { Base } from './Base';
 
 export class InsertCommand extends Base {
   execute(data: Record<number, any>) {
-    const [parent, index] = this.validate(data);
-
-    parent.splice(index, 0, this.value);
-  }
-
-  getMigrateCommand(data: Record<string, any>): DataSchema[] {
-    this.validate(data);
-
-    return [
-      {
-        type: 'insert',
-        paths: this.paths,
-        value: this.value,
-      },
-    ];
-  }
-
-  getRevertCommand(data: Record<string, any>): DataSchema[] {
-    this.validate(data);
-
-    return [
-      {
-        type: 'delete',
-        paths: this.paths,
-        value: null,
-      },
-    ];
-  }
-
-  protected validate(data: Record<string, any>): [any[], number] {
     const parent = this.getParent(data);
-    const lastPath = Number(this.getLastPath());
+    const index = Number(this.getLastPath());
+    const commands = this.initCommands();
 
     if (!Array.isArray(parent)) {
       throw new TypeError(
@@ -41,10 +12,22 @@ export class InsertCommand extends Base {
       );
     }
 
-    if (Number.isNaN(lastPath)) {
+    if (Number.isNaN(index)) {
       throw new TypeError(`Array key is not a number`);
     }
 
-    return [parent, lastPath];
+    commands.migrate.push({
+      type: 'insert',
+      paths: this.paths,
+      value: this.value,
+    });
+    commands.revert.push({
+      type: 'delete',
+      paths: this.paths,
+      value: null,
+    });
+    parent.splice(index, 0, this.value);
+
+    return commands;
   }
 }

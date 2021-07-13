@@ -1,57 +1,36 @@
 import isEqual from 'lodash.isequal';
-import { Base, DataSchema } from './Base';
+import { Base } from './Base';
 
 export class SetCommand extends Base {
   execute(data: Record<string, any>) {
     const parent = this.getParent(data);
     const lastPath = this.getLastPath();
+    const commands = this.initCommands();
 
     if (!isEqual(parent[lastPath], this.value)) {
-      parent[lastPath] = this.value;
-    }
-  }
-
-  getMigrateCommand(data: Record<string, any>): DataSchema[] {
-    const parent = this.getParent(data);
-    const lastPath = this.getLastPath();
-
-    if (isEqual(parent[lastPath], this.value)) {
-      return [];
-    }
-
-    return [
-      {
+      commands.migrate.push({
         type: 'set',
         paths: this.paths,
         value: this.value,
-      },
-    ];
-  }
+      });
 
-  getRevertCommand(data: Record<string, any>): DataSchema[] {
-    const parent = this.getParent(data);
-    const lastPath = this.getLastPath();
-
-    if (isEqual(parent[lastPath], this.value)) {
-      return [];
-    }
-
-    if (parent.hasOwnProperty(lastPath)) {
-      return [
-        {
+      if (parent.hasOwnProperty(lastPath)) {
+        commands.revert.push({
           type: 'set',
           paths: this.paths,
           value: parent[lastPath],
-        },
-      ];
+        });
+      } else {
+        commands.revert.push({
+          type: 'delete',
+          paths: this.paths,
+          value: null,
+        });
+      }
+
+      parent[lastPath] = this.value;
     }
 
-    return [
-      {
-        type: 'delete',
-        paths: this.paths,
-        value: null,
-      },
-    ];
+    return commands;
   }
 }

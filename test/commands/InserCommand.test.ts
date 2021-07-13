@@ -37,23 +37,20 @@ it('the last key should be number', () => {
 it('can create migrate command', () => {
   const command = new InsertCommand(['2'], 'cc');
 
-  expect(command.getMigrateCommand(['aa', 'bb', 'cc'])).toEqual(
-    expect.arrayContaining([
+  expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'insert',
         paths: ['2'],
         value: 'cc',
       },
     ]),
-  );
-
-  expect(command.getRevertCommand(['aa', 'bb', 'cc'])).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['2'],
         value: null,
       },
     ]),
-  );
+  });
 });

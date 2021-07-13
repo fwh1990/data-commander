@@ -8,37 +8,8 @@ export class LpushCommand extends Base {
   }
 
   execute(data: Record<string, any>) {
-    const currentData = this.validate(data);
-
-    currentData.unshift(this.value);
-  }
-
-  getMigrateCommand(data: Record<string, any>): DataSchema[] {
-    this.validate(data);
-
-    return [
-      {
-        type: 'insert',
-        paths: this.paths.concat('0'),
-        value: this.value,
-      },
-    ];
-  }
-
-  getRevertCommand(data: Record<string, any>): DataSchema[] {
-    this.validate(data);
-
-    return [
-      {
-        type: 'delete',
-        paths: this.paths.concat('0'),
-        value: null,
-      },
-    ];
-  }
-
-  protected validate(data: Record<string, any>): any[] {
     const currentData = this.getData(data);
+    const commands = this.initCommands();
 
     if (!Array.isArray(currentData)) {
       throw new TypeError(
@@ -48,6 +19,18 @@ export class LpushCommand extends Base {
       );
     }
 
-    return currentData;
+    commands.migrate.push({
+      type: 'insert',
+      paths: this.paths.concat('0'),
+      value: this.value,
+    });
+    commands.revert.push({
+      type: 'delete',
+      paths: this.paths.concat('0'),
+      value: null,
+    });
+    currentData.unshift(this.value);
+
+    return commands;
   }
 }

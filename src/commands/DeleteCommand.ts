@@ -9,62 +9,33 @@ export class DeleteCommand extends Base {
   execute(data: Record<string, any>) {
     const parent = this.getParent(data);
     const lastPath = this.getLastPath();
+    const shouldDelete = parent.hasOwnProperty(lastPath);
+    const commands = this.initCommands();
 
-    if (parent.hasOwnProperty(lastPath)) {
-      if (Array.isArray(parent) && !Number.isNaN(Number(lastPath))) {
-        parent.splice(Number(lastPath), 1);
-      } else {
-        delete parent[lastPath];
-      }
-    }
-  }
-
-  getMigrateCommand(data: Record<string, any>): DataSchema[] {
-    const [should] = this.shouldDelete(data);
-
-    if (!should) {
-      return [];
-    }
-
-    return [
-      {
+    if (shouldDelete) {
+      commands.migrate.push({
         type: 'delete',
         paths: this.paths,
         value: null,
-      },
-    ];
-  }
+      });
 
-  getRevertCommand(data: Record<string, any>): DataSchema[] {
-    const [should, parent, value] = this.shouldDelete(data);
-
-    if (!should) {
-      return [];
-    }
-
-    if (Array.isArray(parent)) {
-      return [
-        {
+      if (Array.isArray(parent) && !Number.isNaN(Number(lastPath))) {
+        commands.revert.push({
           type: 'insert',
           paths: this.paths,
-          value,
-        },
-      ];
+          value: parent[Number(lastPath)],
+        });
+        parent.splice(Number(lastPath), 1);
+      } else {
+        commands.revert.push({
+          type: 'set',
+          paths: this.paths,
+          value: parent[lastPath],
+        });
+        delete parent[lastPath];
+      }
     }
 
-    return [
-      {
-        type: 'set',
-        paths: this.paths,
-        value: value,
-      },
-    ];
-  }
-
-  protected shouldDelete(data: Record<string, any>): [boolean, any, any] {
-    const parent = this.getParent(data);
-    const lastPath = this.getLastPath();
-
-    return [parent.hasOwnProperty(lastPath), parent, parent[lastPath]];
+    return commands;
   }
 }

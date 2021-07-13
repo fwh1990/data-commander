@@ -62,8 +62,8 @@ it('can create migrate command', () => {
     },
   });
 
-  expect(command.getMigrateCommand({})).toEqual(
-    expect.arrayContaining([
+  expect(command.execute({})).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test'],
@@ -72,38 +72,34 @@ it('can create migrate command', () => {
         },
       },
     ]),
-  );
-  expect(command.getRevertCommand({})).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['test'],
         value: null,
       },
     ]),
-  );
+  });
 
-  expect(command.getMigrateCommand({ test: {} })).toEqual(
-    expect.arrayContaining([
+  expect(command.execute({ test: {} })).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 3,
       },
     ]),
-  );
-  expect(command.getRevertCommand({ test: {} })).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'delete',
         paths: ['test', 'test1'],
         value: null,
       },
     ]),
-  );
+  });
 
-  expect(command.getMigrateCommand({ test: 'x' })).toEqual(
-    expect.arrayContaining([
+  expect(command.execute({ test: 'x' })).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test'],
@@ -112,35 +108,31 @@ it('can create migrate command', () => {
         },
       },
     ]),
-  );
-  expect(command.getRevertCommand({ test: 'x' })).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test'],
         value: 'x',
       },
     ]),
-  );
+  });
 
-  expect(command.getMigrateCommand({ test: { test1: 2 } })).toEqual(
-    expect.arrayContaining([
+  expect(command.execute({ test: { test1: 2 } })).toMatchObject({
+    migrate: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 3,
       },
     ]),
-  );
-  expect(command.getRevertCommand({ test: { test1: 2 } })).toEqual(
-    expect.arrayContaining([
+    revert: expect.arrayContaining([
       <DataSchema>{
         type: 'set',
         paths: ['test', 'test1'],
         value: 2,
       },
     ]),
-  );
+  });
 });
 
 it('Migrate command will not generate with same value', () => {
@@ -150,6 +142,6 @@ it('Migrate command will not generate with same value', () => {
     },
   });
 
-  expect(command.getMigrateCommand({ test: { test1: 3 } })).toHaveLength(0);
-  expect(command.getRevertCommand({ test: { test1: 3 } })).toHaveLength(0);
+  expect(command.execute({ test: { test1: 3 } }).migrate).toHaveLength(0);
+  expect(command.execute({ test: { test1: 3 } }).revert).toHaveLength(0);
 });

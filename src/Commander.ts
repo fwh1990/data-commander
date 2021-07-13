@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash.clonedeep';
 import { Base, DataSchema } from './commands/Base';
 import { DeleteCommand } from './commands/DeleteCommand';
 import { InsertCommand } from './commands/InsertCommand';
@@ -46,26 +45,20 @@ export class Commander {
     return this.commands;
   }
 
-  execute(data: object) {
-    return this.commands.forEach((command) => command.execute(data));
-  }
-
-  toSchema(data: object): SchemaCollection {
-    data = cloneDeep(data);
-    const ups: DataSchema[] = [];
-    const downs: DataSchema[] = [];
-
-    this.commands.forEach((command) => {
-      ups.push(...command.getMigrateCommand(data));
-      downs.unshift(...command.getRevertCommand(data));
-
-      command.execute(data);
-    });
-
-    return {
-      ups: ups,
-      downs: downs,
+  execute(data: object): SchemaCollection {
+    const collection: SchemaCollection = {
+      ups: [],
+      downs: [],
       id: uuid.v1(),
     };
+
+    this.commands.forEach((command) => {
+      const { migrate, revert } = command.execute(data);
+
+      collection.ups.push(...migrate);
+      collection.downs.unshift(...revert);
+    });
+
+    return collection;
   }
 }
