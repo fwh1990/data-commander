@@ -3,6 +3,7 @@ import { DeleteCommand } from './commands/DeleteCommand';
 import { InsertCommand } from './commands/InsertCommand';
 import { SetCommand } from './commands/SetCommand';
 import { nanoid } from 'nanoid';
+import cloneDeep from 'lodash.clonedeep';
 
 export interface SchemaCollection {
   ups: DataSchema[];
@@ -58,6 +59,16 @@ export class Commander {
       collection.ups.push(...migrate);
       collection.downs.unshift(...revert);
     });
+
+    // Clear Proxy effect.
+    if (collection.ups.length) {
+      collection.ups = cloneDeep(collection.ups);
+    }
+
+    // Clear Proxy effect.
+    if (collection.downs.length) {
+      collection.downs = cloneDeep(collection.downs);
+    }
 
     return collection;
   }
