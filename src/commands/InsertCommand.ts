@@ -20,13 +20,13 @@ export class InsertCommand extends Base {
     if (createSchema) {
       commands.up.push({
         type: 'insert',
-        paths: this.paths,
-        value: cloneDeep(this.value),
+        path: this.paths,
+        data: cloneDeep(this.value),
       });
       commands.down.push({
         type: 'delete',
-        paths: this.paths,
-        value: null,
+        path: this.paths,
+        data: null,
       });
     }
 

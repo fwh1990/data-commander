@@ -1,8 +1,8 @@
 import cloneDeep from 'lodash.clonedeep';
-import { Base, DataSchema } from './Base';
+import { Base, SchemaItem } from './Base';
 
 export class DeleteCommand extends Base {
-  constructor(pathsOrCommand: DataSchema | [string, ...string[]]) {
+  constructor(pathsOrCommand: SchemaItem | [string, ...string[]]) {
     // @ts-ignore
     super(pathsOrCommand, null);
   }
@@ -17,24 +17,24 @@ export class DeleteCommand extends Base {
       createSchema &&
         commands.up.push({
           type: 'delete',
-          paths: this.paths,
-          value: null,
+          path: this.paths,
+          data: null,
         });
 
       if (Array.isArray(parent) && !Number.isNaN(Number(lastPath))) {
         createSchema &&
           commands.down.push({
             type: 'insert',
-            paths: this.paths,
-            value: cloneDeep(parent[Number(lastPath)]),
+            path: this.paths,
+            data: cloneDeep(parent[Number(lastPath)]),
           });
         parent.splice(Number(lastPath), 1);
       } else {
         createSchema &&
           commands.down.push({
             type: 'set',
-            paths: this.paths,
-            value: cloneDeep(parent[lastPath]),
+            path: this.paths,
+            data: cloneDeep(parent[lastPath]),
           });
         delete parent[lastPath];
       }

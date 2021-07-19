@@ -1,7 +1,7 @@
-export interface DataSchema {
+export interface SchemaItem {
   type: 'set' | 'delete' | 'insert';
-  paths: string[];
-  value: any;
+  path: string[];
+  data: any;
 }
 
 export abstract class Base {
@@ -9,14 +9,14 @@ export abstract class Base {
   protected readonly value: any;
 
   constructor(paths: [string, ...string[]], value: any);
-  constructor(schema: DataSchema);
-  constructor(first: DataSchema | string[], value?: any) {
+  constructor(schema: SchemaItem);
+  constructor(first: SchemaItem | string[], value?: any) {
     if (Array.isArray(first)) {
       this.paths = first;
       this.value = value;
     } else {
-      this.paths = first.paths;
-      this.value = first.value;
+      this.paths = first.path;
+      this.value = first.data;
     }
   }
 
@@ -44,13 +44,13 @@ export abstract class Base {
     data: Record<string, any>,
     createSchema?: boolean,
   ): {
-    up: DataSchema[];
-    down: DataSchema[];
+    up: SchemaItem[];
+    down: SchemaItem[];
   };
 
   protected initCommands(): {
-    up: DataSchema[];
-    down: DataSchema[];
+    up: SchemaItem[];
+    down: SchemaItem[];
   } {
     return {
       up: [],

@@ -1,4 +1,4 @@
-import { MergeCommand, DataSchema } from '../../src';
+import { MergeCommand, SchemaItem } from '../../src';
 
 it('can merge deep object', () => {
   const data1: Record<string, any> = {};
@@ -64,72 +64,72 @@ it('can create migrate command', () => {
 
   expect(command.execute({})).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test'],
-        value: {
+        path: ['test'],
+        data: {
           test1: 3,
         },
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['test'],
-        value: null,
+        path: ['test'],
+        data: null,
       },
     ]),
   });
 
   expect(command.execute({ test: {} })).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test', 'test1'],
-        value: 3,
+        path: ['test', 'test1'],
+        data: 3,
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['test', 'test1'],
-        value: null,
+        path: ['test', 'test1'],
+        data: null,
       },
     ]),
   });
 
   expect(command.execute({ test: 'x' })).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test'],
-        value: {
+        path: ['test'],
+        data: {
           test1: 3,
         },
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test'],
-        value: 'x',
+        path: ['test'],
+        data: 'x',
       },
     ]),
   });
 
   expect(command.execute({ test: { test1: 2 } })).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test', 'test1'],
-        value: 3,
+        path: ['test', 'test1'],
+        data: 3,
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test', 'test1'],
-        value: 2,
+        path: ['test', 'test1'],
+        data: 2,
       },
     ]),
   });

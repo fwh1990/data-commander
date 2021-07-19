@@ -1,4 +1,4 @@
-import { InsertCommand, DataSchema } from '../../src';
+import { InsertCommand, SchemaItem } from '../../src';
 
 it('can insert array item', () => {
   const data = {
@@ -39,17 +39,17 @@ it('can create migrate command', () => {
 
   expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'insert',
-        paths: ['2'],
-        value: 'cc',
+        path: ['2'],
+        data: 'cc',
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['2'],
-        value: null,
+        path: ['2'],
+        data: null,
       },
     ]),
   });

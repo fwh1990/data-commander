@@ -12,21 +12,21 @@ export class SetCommand extends Base {
       if (createSchema) {
         commands.up.push({
           type: 'set',
-          paths: this.paths,
-          value: cloneDeep(this.value),
+          path: this.paths,
+          data: cloneDeep(this.value),
         });
 
         if (parent.hasOwnProperty(lastPath)) {
           commands.down.push({
             type: 'set',
-            paths: this.paths,
-            value: cloneDeep(parent[lastPath]),
+            path: this.paths,
+            data: cloneDeep(parent[lastPath]),
           });
         } else {
           commands.down.push({
             type: 'delete',
-            paths: this.paths,
-            value: null,
+            path: this.paths,
+            data: null,
           });
         }
       }

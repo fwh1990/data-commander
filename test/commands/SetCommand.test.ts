@@ -1,4 +1,4 @@
-import { SetCommand, DataSchema } from '../../src';
+import { SetCommand, SchemaItem } from '../../src';
 
 /**
  * Test for base class
@@ -68,34 +68,34 @@ it('can create migrate command', () => {
 
   expect(command.execute({ test: { test1: 'y' } })).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test', 'test1'],
-        value: 'x',
+        path: ['test', 'test1'],
+        data: 'x',
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test', 'test1'],
-        value: 'y',
+        path: ['test', 'test1'],
+        data: 'y',
       },
     ]),
   });
 
   expect(command.execute({ test: {} })).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['test', 'test1'],
-        value: 'x',
+        path: ['test', 'test1'],
+        data: 'x',
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['test', 'test1'],
-        value: null,
+        path: ['test', 'test1'],
+        data: null,
       },
     ]),
   });

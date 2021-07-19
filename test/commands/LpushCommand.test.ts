@@ -1,4 +1,4 @@
-import { LpushCommand, DataSchema } from '../../src';
+import { LpushCommand, SchemaItem } from '../../src';
 
 it('can left push array item', () => {
   const data = {
@@ -32,17 +32,17 @@ it('can create migrate command', () => {
 
   expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'insert',
-        paths: ['0'],
-        value: 'cc',
+        path: ['0'],
+        data: 'cc',
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['0'],
-        value: null,
+        path: ['0'],
+        data: null,
       },
     ]),
   });

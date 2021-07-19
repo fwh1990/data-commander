@@ -27,21 +27,21 @@ export class MergeCommand extends Base {
             if (createSchema) {
               commands.up.push({
                 type: 'set',
-                paths: paths.concat(property),
-                value: cloneDeep(foreign),
+                path: paths.concat(property),
+                data: cloneDeep(foreign),
               });
 
               if (obj.hasOwnProperty(property)) {
                 commands.down.push({
                   type: 'set',
-                  paths: paths.concat(property),
-                  value: cloneDeep(source),
+                  path: paths.concat(property),
+                  data: cloneDeep(source),
                 });
               } else {
                 commands.down.push({
                   type: 'delete',
-                  paths: paths.concat(property),
-                  value: null,
+                  path: paths.concat(property),
+                  data: null,
                 });
               }
             }

@@ -52,19 +52,19 @@ const commander = new Commander([
 
 const schema = commander.execute({});
 // {
-//   ups: [
-//     { type: 'set', paths: ['x'], value: 10 },
-//     { type: 'delete', paths: ['y'], value: null }
+//   up: [
+//     { type: 'set', path: ['x'], data: 10 },
+//     { type: 'delete', path: ['y'], data: null }
 //   ],
-//   downs: [
-//     {type: 'set', paths: ['y'], value: 2 },
-//     { type: 'set', paths: ['x'], value: 1 }
+//   down: [
+//     {type: 'set', path: ['y'], data: 2 },
+//     { type: 'set', path: ['x'], data: 1 }
 //   ],
-//   id: 'f899fee0-d25f-11eb-b93f-b58154aca2a5'
+//   id: 'c5rgDxMM_pML9079'
 // }
 ```
 
-## Revert
+## Migrate or Revert
 
 ```typescript
 const data = {
@@ -77,12 +77,14 @@ const commander = new Commander([
   new DeleteCommand(['y']),
 ]);
 
-// Generate schema before execute.
 const schema = commander.execute(data);
+console.log(data); // { x: 10 }
 
 Commander.fromSchema(schema).revert(data);
-
 console.log(data); // { x: 1, y: 2 }
+
+Commander.fromSchema(schema).migrate(data);
+console.log(data); // { x: 10 }
 ```
 
 # Commands

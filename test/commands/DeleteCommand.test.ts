@@ -1,4 +1,4 @@
-import { DeleteCommand, DataSchema } from '../../src';
+import { DeleteCommand, SchemaItem } from '../../src';
 
 it('delete object property', () => {
   const data = {
@@ -38,34 +38,34 @@ it('can create migrate command', () => {
 
   expect(command.execute({ '2': 'cc' })).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['2'],
-        value: null,
+        path: ['2'],
+        data: null,
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'set',
-        paths: ['2'],
-        value: 'cc',
+        path: ['2'],
+        data: 'cc',
       },
     ]),
   });
 
   expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['2'],
-        value: null,
+        path: ['2'],
+        data: null,
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'insert',
-        paths: ['2'],
-        value: 'cc',
+        path: ['2'],
+        data: 'cc',
       },
     ]),
   });

@@ -1,10 +1,10 @@
 import cloneDeep from 'lodash.clonedeep';
-import { Base, DataSchema } from './Base';
+import { Base, SchemaItem } from './Base';
 
 export class LpushCommand extends Base {
   constructor(paths: string[], value: any);
-  constructor(command: DataSchema);
-  constructor(first: DataSchema | string[], value?: any) {
+  constructor(command: SchemaItem);
+  constructor(first: SchemaItem | string[], value?: any) {
     super(first as [string, ...string[]], value);
   }
 
@@ -23,13 +23,13 @@ export class LpushCommand extends Base {
     if (createSchema) {
       commands.up.push({
         type: 'insert',
-        paths: this.paths.concat('0'),
-        value: cloneDeep(this.value),
+        path: this.paths.concat('0'),
+        data: cloneDeep(this.value),
       });
       commands.down.push({
         type: 'delete',
-        paths: this.paths.concat('0'),
-        value: null,
+        path: this.paths.concat('0'),
+        data: null,
       });
     }
 

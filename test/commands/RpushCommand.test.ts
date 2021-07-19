@@ -1,4 +1,4 @@
-import { RpushCommand, DataSchema } from '../../src';
+import { RpushCommand, SchemaItem } from '../../src';
 
 it('can right push array item', () => {
   const data = {
@@ -32,17 +32,17 @@ it('can create migrate command', () => {
 
   expect(command.execute(['aa', 'bb', 'cc'])).toMatchObject({
     up: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'insert',
-        paths: ['3'],
-        value: 'cc',
+        path: ['3'],
+        data: 'cc',
       },
     ]),
     down: expect.arrayContaining([
-      <DataSchema>{
+      <SchemaItem>{
         type: 'delete',
-        paths: ['3'],
-        value: null,
+        path: ['3'],
+        data: null,
       },
     ]),
   });

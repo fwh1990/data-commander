@@ -1,29 +1,29 @@
-import { Base, DataSchema } from './commands/Base';
+import { Base, SchemaItem } from './commands/Base';
 import { DeleteCommand } from './commands/DeleteCommand';
 import { InsertCommand } from './commands/InsertCommand';
 import { SetCommand } from './commands/SetCommand';
 import { nanoid } from 'nanoid';
 
-export interface SchemaCollection {
-  up: DataSchema[];
-  down: DataSchema[];
+export interface Schema {
+  up: SchemaItem[];
+  down: SchemaItem[];
   id: string;
 }
 
 export class Commander {
-  static fromSchema(collection: SchemaCollection) {
+  static fromSchema(schema: Schema) {
     return {
       migrate: (data: object) => {
-        this.execute(collection.up, data, false);
+        this.execute(schema.up, data, false);
       },
       revert: (data: object) => {
-        this.execute(collection.down, data, false);
+        this.execute(schema.down, data, false);
       },
     };
   }
 
   protected static execute(
-    schema: DataSchema[],
+    schema: SchemaItem[],
     data: object,
     createSchema: boolean = true,
   ) {
@@ -49,8 +49,8 @@ export class Commander {
     return this.commands;
   }
 
-  execute(data: object, createSchema: boolean = true): SchemaCollection {
-    const schemas: SchemaCollection = {
+  execute(data: object, createSchema: boolean = true): Schema {
+    const schemas: Schema = {
       up: [],
       down: [],
       id: nanoid(16),

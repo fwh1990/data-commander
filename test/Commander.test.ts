@@ -2,7 +2,7 @@ import {
   Commander,
   DeleteCommand,
   RpushCommand,
-  SchemaCollection,
+  Schema,
   SetCommand,
 } from '../src';
 import { produce } from 'immer';
@@ -77,7 +77,7 @@ it('can revert the commands with immer', () => {
     new DeleteCommand(['test1']),
   ]);
 
-  let schema: SchemaCollection;
+  let schema: Schema;
   let firstMigrated = produce(original, (draft) => {
     schema = commaner.execute(draft);
   });
