@@ -14,19 +14,15 @@ export class Commander {
   static fromSchema(schema: Schema) {
     return {
       migrate: (data: object) => {
-        this.execute(schema.up, data, false);
+        this.execute(schema.up, data);
       },
       revert: (data: object) => {
-        this.execute(schema.down, data, false);
+        this.execute(schema.down, data);
       },
     };
   }
 
-  protected static execute(
-    schema: SchemaItem[],
-    data: object,
-    createSchema: boolean = true,
-  ) {
+  protected static execute(schema: SchemaItem[], data: object) {
     return new Commander(
       schema.map((upCommand) => {
         switch (upCommand.type) {
@@ -40,7 +36,7 @@ export class Commander {
             throw new TypeError('Unknown command type: ' + upCommand.type);
         }
       }),
-    ).execute(data, createSchema);
+    ).execute(data, false);
   }
 
   constructor(protected readonly commands: Base[]) {}
