@@ -4,6 +4,11 @@
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "license": "MIT",
+  "repository": "git@github.com:fwh1990/data-commander.git",
+  "keywords": [
+    "data migration",
+    "data command"
+  ],
   "exports": {
     ".": {
       "require": "./lib/index.js",
