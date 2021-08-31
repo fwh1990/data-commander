@@ -1,6 +1,6 @@
 {
   "name": "data-commander",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "license": "MIT",
@@ -38,7 +38,7 @@
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
-    "nanoid": "^3.1.23"
+    "nanoid": "^3.1.25"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",

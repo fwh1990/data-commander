@@ -8,7 +8,7 @@ export abstract class Base {
   protected readonly paths: string[];
   protected readonly value: any;
 
-  constructor(paths: [string, ...string[]], value: any);
+  constructor(paths: string[], value: any);
   constructor(schema: SchemaItem);
   constructor(first: SchemaItem | string[], value?: any) {
     if (Array.isArray(first)) {

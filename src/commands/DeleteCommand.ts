@@ -2,7 +2,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { Base, SchemaItem } from './Base';
 
 export class DeleteCommand extends Base {
-  constructor(pathsOrCommand: SchemaItem | [string, ...string[]]) {
+  constructor(pathsOrCommand: SchemaItem | string[]) {
     // @ts-ignore
     super(pathsOrCommand, null);
   }

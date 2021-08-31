@@ -1,13 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
-import { Base, SchemaItem } from './Base';
+import { Base } from './Base';
 
 export class RpushCommand extends Base {
-  constructor(paths: string[], value: any);
-  constructor(command: SchemaItem);
-  constructor(first: SchemaItem | string[], value?: any) {
-    super(first as [string, ...string[]], value);
-  }
-
   execute(data: Record<string, any>, createSchema: boolean = true) {
     const currentData = this.getData(data);
     const commands = this.initCommands();

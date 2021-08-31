@@ -4,7 +4,7 @@ import { SetCommand, SchemaItem } from '../../src';
  * Test for base class
  */
 it('can get paths', () => {
-  const paths: [string, ...string[]] = ['test', 'test1'];
+  const paths = ['test', 'test1'];
   const command = new SetCommand(paths, 2);
 
   expect(command.getPaths()).toEqual(paths);
